@@ -1,0 +1,855 @@
+<html>
+
+<head>
+	<link type="text/css" rel="stylesheet" href="/style-guide/css/fluig-style-guide.min.css" />
+	<script type="text/javascript" src="/portal/resources/js/jquery/jquery.js"></script>
+	<script type="text/javascript" src="/portal/resources/js/jquery/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="/portal/resources/js/mustache/mustache-min.js"></script>
+	<script type="text/javascript" src="/style-guide/js/fluig-style-guide.min.js" charset="utf-8"></script>
+	<script src="SuporteJuridico.js"></script>
+	<script src="/webdesk/vcXMLRPC.js"></script>
+</head>
+
+<body>
+	<style>
+		input[type="radio"] {
+			margin-left: 0px !important;
+			margin-right: 0px !important;
+		}
+
+		.fluig-style-guide .switch.switch-labels .switch-input:checked+.switch-button:before {
+			content: "SIM" !important;
+		}
+
+		.fluig-style-guide .switch.switch-labels .switch-button:before {
+			content: "NÂO" !important;
+		}
+
+		.fluig-style-guide .nav-tabs.nav-justified>li.in>a {
+			background-color: #58595b;
+			color: #fff;
+		}
+
+		html,
+		body {
+			background-color: #fff !important;
+		}
+
+		div.fluig-style-guide {
+			font-family: "Open Sans", Arial, sans-serif;
+			color: #58595b;
+		}
+
+		div.fluig-style-guide #coltabs>li {
+			margin-right: 0;
+			border: 0 none !important;
+		}
+
+		div.fluig-style-guide #coltabs>li>a {
+			font-weight: 400;
+			border-color: #000 !important;
+		}
+
+		div.fluig-style-guide #coltabs>li.active>a {
+			font-weight: 700;
+			color: #fff;
+			background-color: #58595b;
+		}
+
+		div.fluig-style-guide #divCollapse>.tab-content {
+			padding: 15px;
+		}
+
+		div.fluig-style-guide .row {
+			margin-left: -15px;
+			margin-right: -15px;
+		}
+
+		div.fluig-style-guide .col-md-12 {
+			padding-left: 15px;
+			padding-right: 15px;
+		}
+
+		div.fluig-style-guide .form-control {
+			height: 32px;
+			padding: 5px 13px;
+			border-color: #ccc;
+			box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+			color: #555 !important;
+		}
+
+		div.fluig-style-guide textarea.form-control {
+			height: auto;
+		}
+
+		div.fluig-style-guide .form-control::placeholder {
+			color: #d2d3d6;
+			font-size: 14px;
+		}
+
+		div.fluig-style-guide select.form-control:not([multiple]) {
+			background-image: url("/style-guide/images/chevron-down.png");
+			background-position: calc(100% - 4px) center;
+			background-size: auto;
+		}
+
+		div.fluig-style-guide .form-control[readonly] {
+			color: #a7a9ac !important;
+			background-color: #f2f2f2 !important;
+			border-color: #d1d3d4 !important;
+		}
+
+		div.fluig-style-guide .form-group {
+			margin-bottom: 15px;
+		}
+
+		div.fluig-style-guide .form-group label {
+			font-size: 14px;
+			font-weight: 700;
+			line-height: 20px;
+			margin-bottom: 5px;
+			color: #58595b;
+		}
+
+		div.fluig-style-guide .radio label {
+			min-height: 20px;
+		}
+
+		div.fluig-style-guide .panel {
+			margin-bottom: 20px;
+			box-shadow: 0 1px 5px 0 rgba(0, 0, 0, .03), 0 2px 3px 0 rgba(0, 0, 0, .06);
+		}
+
+		div.fluig-style-guide #bodyHist .card {
+			border-color: #e8e9eb;
+			box-shadow: 0 3px 5px 0 rgba(0, 0, 0, .08), 0 1px 3px 0 rgba(0, 0, 0, .06);
+		}
+
+		div.fluig-style-guide #bodyHist .card-title {
+			color: #58595b;
+		}
+
+		#divDecisao .switch .switch-button,
+		#divDecisaoAprov .switch .switch-button {
+			height: 24px;
+			margin: 0;
+			background-color: #d1d3d4;
+		}
+
+		#divDecisao .switch .switch-button:after,
+		#divDecisaoAprov .switch .switch-button:after {
+			top: 4px;
+			left: 4px;
+			width: 16px;
+			height: 16px;
+			border: 0;
+			background-color: #fff;
+		}
+
+		#divDecisao .switch .switch-button:active:after,
+		#divDecisaoAprov .switch .switch-button:active:after {
+			width: 24px;
+		}
+
+		#divDecisao .switch .switch-input:checked+.switch-button:after,
+		#divDecisaoAprov .switch .switch-input:checked+.switch-button:after {
+			content: "";
+			left: calc(100% - 4px);
+			transform: translateX(-100%);
+			border: 0;
+			background-color: #fff;
+		}
+
+		#divDecisao .switch.switch-labels .switch-button:before,
+		#divDecisaoAprov .switch.switch-labels .switch-button:before {
+			top: 5px;
+			left: calc(100% - 25px);
+			width: auto;
+			height: auto;
+			line-height: 1.42857143;
+			font-size: 10px;
+			color: #fff;
+		}
+
+		#divDecisao .switch.switch-labels .switch-input:checked+.switch-button:before,
+		#divDecisaoAprov .switch.switch-labels .switch-input:checked+.switch-button:before {
+			left: 6px;
+		}
+
+		#divDecisao .switch.switch-success>.switch-input:checked+.switch-button,
+		#divDecisaoAprov .switch.switch-success>.switch-input:checked+.switch-button {
+			background-color: #1ab83f;
+		}
+
+		#divDecisao .switch.switch-warning>.switch-input:checked+.switch-button,
+		#divDecisaoAprov .switch.switch-warning>.switch-input:checked+.switch-button {
+			background-color: #e3b420;
+		}
+
+		#divDecisao .switch.switch-danger>.switch-input:checked+.switch-button {
+			background-color: #cc3d3d;
+		}
+	</style>
+	<div class="fluig-style-guide">
+		<form name="form" role="form">
+			<div id="divCollapse" class="">
+				<!-- Nav tabs -->
+				<ul id="coltabs" class="nav nav-tabs nav-justified nav-pills" role="tablist" style="padding-bottom: 0px;">
+					<li class="collapse-tab"><a href="#tabChamados" role="tab" id='aTabChamados' data-toggle="tab"
+							aria-expanded="true" style="border: black 1px solid;border-radius: 4px 4px 0 0;">Dados do Chamado</a></li>
+					<li class="collapse-tab" class=""><a href="#tabAprovacao" role="tab" id="aTabAprovacao" data-toggle="tab"
+							aria-expanded="false" style="border: black 1px solid;border-radius: 4px 4px 0 0;">Aprovação</a></li>
+					<li class="collapse-tab" class=""><a href="#tabHistorico" role="tab" id="aTabHistorico" data-toggle="tab"
+							aria-expanded="false" style="border: black 1px solid;border-radius: 4px 4px 0 0;">Histórico</a>
+					</li>
+				</ul>
+				<!-- Tab panes -->
+				<div class="tab-content" style="border: black solid 1px;">
+					<div class="tab-pane" id="tabChamados">
+						<div class="row">
+							<div class='col-md-12'>
+								<label for="usuario">Solicitante: <span style="color: red;">*</span></label>
+								<br>
+								<select class="form-control" name="usuario" id="usuario" analytics="true" gooddataid="1"
+									required="required" dataset="" datasetkey="" datasetvalue=""></select>
+								<span id="spanUsuario"></span>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class='col-md-12'>
+								<label for="selectObra">Obra:  <span style="color: red;">*</span></label>
+								<br>
+								<select class="form-control" name="selectObra" id="selectObra" analytics="true">
+									<option value=""></option>
+								</select>
+								<span id="spanObra"></span>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class='col-md-12'>
+								<label for="selectDepartamento">Departamento:</label>
+								<br>
+								<input type="text" name="selectDepartamento" list="selectDepartamento" class="form-control">
+								<datalist id="selectDepartamento">
+									<option value=" - "></option>
+								</datalist>
+								<span id="spanDepartamento"></span>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class='col-md-12'>
+								<div class='form-group'>
+									<label for="prazo_limite">Prazo limite:  <span style="color: red;">*</span></label>
+									<br>
+									<input type='text' id='prazo_limite' name='prazo_limite' class="form-control" />
+									<span id="spanPrazo_limite"></span>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class='col-md-12'>
+								<label for="">Categoria:  <span style="color: red;">*</span></label>
+								<br>
+								<select name="categoria" id="categoria" class="form-control">
+									<option value=""></option>
+									<option value="Análise de Contrato">Análise de Contrato</option>
+									<option value="Confecção de Contrato ou aditivo">Confecção de Contrato ou aditivo</option>
+									<option value="Termo de Constituição de Consórcio">Termo de Constituição de Consórcio</option>
+									<option value="Termo de Compromisso de Constituição de Consórcio">Termo de Compromisso de Constituição de Consórcio</option>
+									<option value="NDA/Memorando de entendimento">NDA/Memorando de entendimento</option>
+									<option value="Consulta Jurídica">Consulta Jurídica</option>
+									<option value="Recurso (ou Contrarrazões) na esfera administrativa – Licitações">Recurso (ou Contrarrazões) na esfera administrativa – Licitações</option>
+									<option value="Confecção (ou resposta) de Notificação Extrajudicial">Confecção (ou resposta) de Notificação Extrajudicial</option>
+									<option value="Confecção de Termo de Acordo">Confecção de Termo de Acordo</option>
+									<option value="Resposta à Notificação">Resposta à Notificação</option>
+									<option value="Confecção de procuração (ou substabelecimento)">Confecção de procuração (ou substabelecimento)</option>
+									<option value="Ajuizamento de ação judicial">Ajuizamento de ação judicial</option>
+								</select>
+								<span id="spanCategoria"></span>
+								<br>
+								<div class="collapse" id="collapse3"
+								style="color:red; border: 2px solid #DC143C; width: fit-content; padding: 4px;">
+								<span style="display:flex;">
+									<label for="checkboxTermoTerceiro">Contratos devem ser enviados ao Jurídico pela <u><a href="http://fluig.castilho.com.br:1010/portal/p/1/pageworkflowview?processID=Solicitac%C3%A3o%20de%20Contratos" target="_blank" style="color: red;">Solicitação de Contratos</a></u>.</label>
+								</span>
+							</div>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-md-12">
+								<strong>Nível de Prioridade:  <span style="color: red;">*</span></strong>
+								<div class="radio">
+									<input type="radio" name="radioPrioridade" id="radioPrioridadeBaixa" value="Baixa" onclick="$('#collapse1').collapse('hide');">
+									<label for="radioPrioridadeBaixa">Baixa</label>
+								</div>
+								<div class="radio">
+									<input type="radio" name="radioPrioridade" id="radioPrioridadeMedia" value="Média" onclick="$('#collapse1').collapse('hide');">
+									<label for="radioPrioridadeMedia">Média</label>
+								</div>
+								<div class="radio">
+									<input type="radio" name="radioPrioridade" id="radioPrioridadeAlta" value="Alta" onclick="$('#collapse1').collapse('show');">
+									<label for="radioPrioridadeAlta">Alta</label>
+								</div>
+							</div>
+							<br>
+						</div>
+						<div class="collapse" id="collapse1"
+							style="color:red; border: 2px solid #DC143C; width: fit-content; padding: 4px;">
+							<span style="display:flex;">
+								<input type="checkbox" name="checkboxTermoTerceiro" id="checkboxTermoTerceiro" style="margin-right: 5px;">
+								<label for="checkboxTermoTerceiro">Concordo que no caso de “prioridade alta” a demanda será repassada para advogados terceirizados, sendo os custos alocados ao centro de custo designado.</label>
+							</span>
+						</div>
+						<br>
+						<div class="row">
+							<div class='col-md-12'>
+								<label for="emailsCopia">E-mails em cópia (Separados por ";"):</label>
+								<textarea name="emailsCopia" id="emailsCopia" cols="20" rows="4" style="resize: none;"
+									class="form-control"></textarea>
+								<br>
+								<span id="spanEmaislCopia"></span>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class='col-md-12'>
+								<label for="descricao">Descrição:  <span style="color: red;">*</span></label>
+								<textarea name="descricao" id="descricao" cols="20" rows="4" style="resize: none;"
+									class="form-control"></textarea>
+								<br>
+								<span id="spanDescricao"></span>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane" id="tabHistorico">
+						<div id="bodyHist">
+
+						</div>
+					</div>
+					<div class="tab-pane" id="tabAprovacao">
+						<div class="row">
+							<div class="col-md-12">
+								<label for="">Solicitante:</label><br>
+								<span id="spanSolicitanteAprovacao"></span>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-md-12">
+								<label for="">Obra:</label><br>
+								<span id="spanObraAprovacao"></span>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-md-12">
+								<label for="">Departamento:</label><br>
+								<span id="spanDepartamentoAprovacao"></span>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-md-12">
+								<label for="">Prioridade:</label><br>
+								<span id="spanPrioridadeAprovacao"></span>
+							</div>
+						</div>
+						<br>
+						<div class="" id="collapse2">
+							<div style="border: 2px solid #DC143C; width: fit-content;">
+								<span
+									style="color:red; margin-left: auto; margin-right: auto; padding: 4px; display: inline-flex;">
+									<input type="checkbox" name="checkboxTermoTerceiroAprov" onclick="return false;"
+										id="checkboxTermoTerceiroAprov" style="margin-right: 5px;">
+									<label for="checkboxTermoTerceiroAprov">Concordo que no caso de “prioridade alta” a demanda pode ser repassada para advogados terceirizados, sendo os custos alocados ao centro de custo designado.</label>
+									<br>
+								</span>
+							</div>
+							<br>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<label for="">Prazo:</label><br>
+								<span id="spanPrazoAprovacao"></span>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-md-12">
+								<label for="">Descrição:</label><br>
+								<span id="spanDescricaoAprovacao"></span>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-md-12">
+								<label for="">Usuário Jurídico:</label><br>
+								<span id="spanUsuarioJuridicoAprovacao"></span>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-md-12">
+								<label for="">Análise Jurídico:</label><br>
+								<span id="spanAnaliseJuridicoAprovacao"></span>
+							</div>
+						</div>
+						<br>
+						<div class="row" align='center' id="divDecisaoAprov">
+							<div class="switch switch-success switch-labels" style="margin-right: 4%; margin-left: 4%;">
+								<label for="radioDecisao1Aprov">Aprovar</label>
+								<input class="switch-input" type="checkbox" id="radioDecisao1Aprov"
+									name="radioDecisao1Aprov"
+									onclick='$("#radioDecisao2Aprov").removeAttr("checked"); $("#radioDecisao3Aprov").removeAttr("checked"); $("#divMotivoDecisaoAprov").hide();'>
+								<label class="switch-button" for="radioDecisao1Aprov">Toggle</label>
+							</div>
+
+							<div class="switch switch-warning switch-labels" style="margin-right: 4%; margin-left: 4%;">
+								<label for="radioDecisao2Aprov">Não aprovar</label>
+								<input class="switch-input" type="checkbox" id="radioDecisao2Aprov"
+									name="radioDecisao2Aprov"
+									onclick='$("#radioDecisao1Aprov").removeAttr("checked"); $("#radioDecisao3Aprov").removeAttr("checked"); $("#divMotivoDecisaoAprov").show();'>
+								<label class="switch-button" for="radioDecisao2Aprov">Toggle</label>
+							</div>
+						</div>
+						<div class="row" id='divMotivoDecisaoAprov'>
+							<div class="col-md-12">
+								<label for="textareaMotivoDecisao">Motivo:</label>
+								<textarea name="textareaMotivoDecisaoAprov" id="textareaMotivoDecisaoAprov" cols="30"
+									rows="4" class="form-control" style="resize: none;"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--<div class="collapse-tabs panel" id="divCollapse">
+				<ul class="nav nav-tabs nav-justified panel-heading" role="tablist" id="ulCollapseTabs">
+					<li class="collapse-tab">
+						<a href="#tabChamados" data-target="#tabChamados" id="aTabChamados" data-toogle="tab"
+							class="btn btn-default">Dados do Chamado</a>
+					</li>
+					<li class="collapse-tab">
+						<a href="#tabAprovacao" data-target="#tabAprovacao" id="aTabAprovacao" data-toogle="tab"
+							class="btn btn-default">Aprovação</a>
+					</li>
+					<li class="collapse-tab">
+						<a href="#tabHistorico" data-target="#tabHistorico" id="aTabHistorico" data-toogle="tab"
+							class="btn btn-default">Histórico</a>
+					</li>
+				</ul>
+				<div class="tab-content panel-body" style="display: contents;">
+					<div class="tab-pane" id="tabChamados">
+						<div class="row">
+							<div class='col-md-12'>
+								<label for="usuario">Solicitante:</label>
+								<br>
+								<select class="form-control" name="usuario" id="usuario" analytics="true" gooddataid="1"
+									required="required" dataset="" datasetkey="" datasetvalue=""></select>
+								<span id="spanUsuario"></span>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class='col-md-12'>
+								<label for="selectObra">Obra:</label>
+								<br>
+								<select class="form-control" name="selectObra" id="selectObra" analytics="true">
+									<option value=""></option>
+								</select>
+								<span id="spanObra"></span>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class='col-md-12'>
+								<div class='form-group'>
+									<label for="prazo_limite">Prazo limite:</label>
+									<br>
+									<input type='text' id='prazo_limite' name='prazo_limite' class="form-control" />
+									<span id="spanPrazo_limite"></span>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class='col-md-12'>
+								<label for="">Categoria:</label>
+								<br>
+								<select name="categoria" id="categoria" class="form-control">
+									<option value=""></option>
+									<option value="Contratos">Contratos</option>
+									<option value="Processos">Processos</option>
+									<option value=""></option>
+								</select>
+								<span id="spanCategoria"></span>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-md-12">
+								<strong>Nível de Prioridade:</strong>
+								<div class="radio">
+									<input type="radio" name="radioPrioridade" id="radioPrioridadeBaixa" value="Baixa">
+									<label for="radioPrioridadeBaixa"
+										onclick="$('#collapse1').collapse('hide');">Baixa</label>
+								</div>
+								<div class="radio">
+									<input type="radio" name="radioPrioridade" id="radioPrioridadeMedia" value="Média">
+									<label for="radioPrioridadeMedia"
+										onclick="$('#collapse1').collapse('hide');">Média</label>
+								</div>
+								<div class="radio">
+									<input type="radio" name="radioPrioridade" id="radioPrioridadeAlta" value="Alta">
+									<label for="radioPrioridadeAlta"
+										onclick="$('#collapse1').collapse('show');">Alta</label>
+								</div>
+							</div>
+							<br>
+						</div>
+						<div class="collapse" id="collapse1"
+							style="color:red; border: 2px solid #DC143C; width: fit-content; padding: 4px;">
+							<span>
+								<input type="checkbox" name="checkboxTermoTerceiro" id="checkboxTermoTerceiro">
+								<label for="checkboxTermoTerceiro">Concordo que em casos urgentes o processo pode
+									ser
+									enviado a um advogado terceiro e os custos serão repassados ao centro de custo
+									da
+									obra.</label>
+							</span>
+						</div>
+						<br>
+						<div class="row">
+							<div class='col-md-12'>
+								<label for="emailsCopia">E-mails em cópia:</label>
+								<textarea name="emailsCopia" id="emailsCopia" cols="20" rows="4" style="resize: none;"
+									class="form-control"></textarea>
+								<br>
+								<span id="spanEmaislCopia"></span>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class='col-md-12'>
+								<label for="descricao">Descrição:</label>
+								<textarea name="descricao" id="descricao" cols="20" rows="4" style="resize: none;"
+									class="form-control"></textarea>
+								<br>
+								<span id="spanDescricao"></span>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane" id="tabHistorico">
+						<div id="bodyHist">
+
+						</div>
+					</div>
+					<div class="tab-pane" id="tabAprovacao">
+						<div class="row">
+							<div class="col-md-12">
+								<label for="">Solicitante:</label><br>
+								<span id="spanSolicitanteAprovacao"></span>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-md-12">
+								<label for="">Obra:</label><br>
+								<span id="spanObraAprovacao"></span>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-md-12">
+								<label for="">Prioridade:</label><br>
+								<span id="spanPrioridadeAprovacao"></span>
+							</div>
+						</div>
+						<br>
+						<div class="" id="collapse2">
+							<div style="border: 2px solid #DC143C; width: fit-content;">
+								<span
+									style="color:red; margin-left: auto; margin-right: auto; padding: 4px; display: inline-flex;">
+									<input type="checkbox" name="checkboxTermoTerceiroAprov" onclick="return false;"
+										id="checkboxTermoTerceiroAprov" style="margin-right: 5px;">
+									<label for="checkboxTermoTerceiroAprov">Concordo que em casos urgentes o processo
+										pode
+										ser enviado a um advogado terceiro e os custos serão repassados ao centro de
+										custo
+										da obra.</label>
+									<br>
+								</span>
+							</div>
+							<br>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<label for="">Prazo:</label><br>
+								<span id="spanPrazoAprovacao"></span>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-md-12">
+								<label for="">Descrição:</label><br>
+								<span id="spanDescricaoAprovacao"></span>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-md-12">
+								<label for="">Usuário Jurídico:</label><br>
+								<span id="spanUsuarioJuridicoAprovacao"></span>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-md-12">
+								<label for="">Análise Jurídico:</label><br>
+								<span id="spanAnaliseJuridicoAprovacao"></span>
+							</div>
+						</div>
+						<br>
+						<div class="row" align='center' id="divDecisaoAprov">
+							<div class="switch switch-success switch-labels" style="margin-right: 4%; margin-left: 4%;">
+								<label for="radioDecisao1Aprov">Aprovar</label>
+								<input class="switch-input" type="checkbox" id="radioDecisao1Aprov"
+									name="radioDecisao1Aprov"
+									onclick='$("#radioDecisao2Aprov").removeAttr("checked"); $("#radioDecisao3Aprov").removeAttr("checked"); $("#divMotivoDecisaoAprov").hide();'>
+								<label class="switch-button" for="radioDecisao1Aprov">Toggle</label>
+							</div>
+
+							<div class="switch switch-warning switch-labels" style="margin-right: 4%; margin-left: 4%;">
+								<label for="radioDecisao2Aprov">Não aprovar</label>
+								<input class="switch-input" type="checkbox" id="radioDecisao2Aprov"
+									name="radioDecisao2Aprov"
+									onclick='$("#radioDecisao1Aprov").removeAttr("checked"); $("#radioDecisao3Aprov").removeAttr("checked"); $("#divMotivoDecisaoAprov").show();'>
+								<label class="switch-button" for="radioDecisao2Aprov">Toggle</label>
+							</div>
+						</div>
+						<div class="row" id='divMotivoDecisaoAprov'>
+							<div class="col-md-12">
+								<label for="textareaMotivoDecisao">Motivo:</label>
+								<textarea name="textareaMotivoDecisaoAprov" id="textareaMotivoDecisaoAprov" cols="30"
+									rows="4" class="form-control" style="resize: none;"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>-->
+			<br>
+			<div class="panel panel-primary" id="divMovimentacao">
+				<div class="panel-heading">
+					<h3 class="panel-title">Movimentar</h3>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-12">
+							<label for="usuarioMovimentar">Usuário:</label>
+							<input type="text" name="usuarioMovimentar" id="usuarioMovimentar" class="form-control"
+								readonly>
+						</div>
+					</div>
+					<br>
+					<div class="row">
+						<div class="col-md-12">
+							<label for="textareaMovimentar">Descrição:  <span style="color: red;">*</span></label>
+							<textarea name="textareaMovimentar" id="textareaMovimentar" cols="30" rows="4"
+								style="resize: none;" class="form-control"></textarea>
+						</div>
+					</div>
+					<br>
+					<div class="row">
+						<div class="col-md-12">
+							<label for="textareaMovimentar">Tempo gasto:  <span style="color: red;">*</span></label>
+							<input type="text" name="textTempoGasto" id="textTempoGasto" class="form-control"
+								mask='99:99:99' placeholder="hh:mm:ss">
+							<br>
+						</div>
+					</div>
+					<!-- <div class="row">
+						<div class="col-md-12">
+							<label for="selectAprovador">Aprovador:  <span style="color: red;">*</span></label>
+							<select name="selectAprovador" id="selectAprovador" class="form-control">
+								<option value=""></option>
+							</select>
+							<br>
+						</div>
+					</div> -->
+					<div class="row">
+						<div class="col-md-12">
+							<label for="textareaJuridico">Campo jurídico: (Só aparece para o jurídico)</label>
+							<textarea name="textareaJuridico" id="textareaJuridico" cols="30" rows="4"
+								style="resize: none;" class="form-control"></textarea>
+						</div>
+					</div>
+					<div class="row" align='center' id="divDecisao">
+						<br>
+						<div class="switch switch-success switch-labels" style="margin-right: 4%; margin-left: 4%;">
+							<label for="radioDecisao1">Aprovar</label>
+							<input class="switch-input" type="checkbox" id="radioDecisao1" name="radioDecisao1"
+								onclick='$("#radioDecisao2").removeAttr("checked"); $("#radioDecisao3").removeAttr("checked");'>
+							<label class="switch-button" for="radioDecisao1">Toggle</label>
+						</div>
+
+						<div class="switch switch-warning switch-labels" style="margin-right: 4%; margin-left: 4%;">
+							<label for="radioDecisao2">Não aprovar</label>
+							<input class="switch-input" type="checkbox" id="radioDecisao2" name="radioDecisao2"
+								onclick='$("#radioDecisao1").removeAttr("checked"); $("#radioDecisao3").removeAttr("checked");'>
+							<label class="switch-button" for="radioDecisao2">Toggle</label>
+						</div>
+
+
+						<div class="switch switch-danger switch-labels" style="margin-right: 4%; margin-left: 4%;">
+							<label for="radioDecisao3">Cancelar</label>
+							<input class="switch-input" type="checkbox" id="radioDecisao3" name="radioDecisao3"
+								onclick='$("#radioDecisao2").removeAttr("checked"); $("#radioDecisao1").removeAttr("checked");'>
+							<label class="switch-button" for="radioDecisao3">Toggle</label>
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-primary" id="divAnaliseJuridico">
+				<div class="panel-heading ">
+					<h3 class="panel-title">
+						<b>Análise Jurídico</b>
+					</h3>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-12">
+							<label for="usuarioJuridico">Usuário:</label>
+							<input type="text" name="usuarioJuridico" id="usuarioJuridico" class="form-control">
+						</div>
+					</div>
+					<br>
+					<div class="row">
+						<div class="col-md-12">
+							<label for="textAnaliseJuridico">Análise:</label>
+							<textarea name="textAnaliseJuridico" id="textAnaliseJuridico" cols="30" rows="4"
+								class="form-control" style="resize: none;"></textarea>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div>
+				<input type="hidden" name="textResolucaoJuridico" id="textResolucaoJuridico">
+				<input type="hidden" name="usuarioLogado" id="usuarioLogado">
+				<input type="hidden" name="solicitante" id="solicitante">
+				<input type="hidden" name="usuAprovador" id="usuAprovador">
+				<input type="hidden" name="obra" id="obra">
+				<input type="hidden" name="usuarioAnaliseJuridico" id="usuarioAnaliseJuridico">
+				<input type="hidden" name="modo" id="modo">
+				<input type="hidden" name="atividade" id="atividade">
+				<input type="hidden" name="numProcess" id="numProcess">
+				<input type="hidden" name="historico" id="historico">
+				<input type="hidden" name="tempoGastoAnalise" id="tempoGastoAnalise">
+				<input type="hidden" name="tempoGastoResolucao" id="tempoGastoResolucao">
+			</div>
+		</form>
+		<script>
+			var beforeSendValidate = function (numState, nextState) {
+				if (ValidaCampos()) {
+					if ($("#modo").val() == "ADD") {
+						$("#obra").val($("#selectObra").val());
+
+						var json = [{
+							"usuario": $("#usuarioLogado").val(),
+							"data": BuscaDataAtual(),
+							"descricao": $("#descricao").val(),
+							"status": $("#atividade").val()
+						}];
+
+						$("#historico").val(JSON.stringify(json));
+						$("#solicitante").val($("#usuario").val());
+					}
+					else {
+						if ($("#atividade").val() == 1 || $("#atividade").val() == 0 || $("#atividade").val() == 4) {
+							var json = JSON.parse($("#historico").val());
+							json.push({
+								"usuario": $("#usuarioLogado").val(),
+								"data": BuscaDataAtual(),
+								"descricao": $("#descricao").val(),
+								"status": $("#atividade").val()
+							});
+							$("#historico").val(JSON.stringify(json));
+						}
+						else if ($("#atividade").val() == 5) {
+							var json = JSON.parse($("#historico").val());
+
+							json.push({
+								"usuario": $("#usuarioLogado").val(),
+								"data": BuscaDataAtual(),
+								"descricao": (function () {
+									if ($("#radioDecisao1").is(":checked")) {
+										return $("#textareaMovimentar").val();
+									}
+									else if ($("#radioDecisao2").is(":checked")) {
+										return "Retornado: " + $("#textareaMovimentar").val();
+									}
+									else {
+										return "Cancelado: " + $("#textareaMovimentar").val();
+									}
+								}()),
+								"status": $("#atividade").val()
+							});
+							$("#historico").val(JSON.stringify(json));
+							$("#textAnaliseJuridico").val($("#textareaMovimentar").val());
+							$("#usuAprovador").val($("#selectAprovador").val());
+							$("#tempoGastoAnalise").val($("#textTempoGasto").val());
+							$("#textTempoGasto").val("");
+							if ($("#radioDecisao1").is(":checked")) {
+								enviarEmail($("#atividade").val());
+							}
+						}
+						else if ($("#atividade").val() == 7) {
+							var json = JSON.parse($("#historico").val());
+							json.push({
+								"usuario": $("#usuarioLogado").val(),
+								"data": BuscaDataAtual(),
+								"descricao": ($("#radioDecisao1Aprov").is(":checked")) ? "Aprovado" : "Retornado: " + $("#textareaMotivoDecisaoAprov").val(),
+								"status": $("#atividade").val()
+							});
+							$("#historico").val(JSON.stringify(json));
+						}
+						else if ($("#atividade").val() == 8) {
+							var json = JSON.parse($("#historico").val());
+							json.push({
+								"usuario": $("#usuarioMovimentar").val(),
+								"data": BuscaDataAtual(),
+								"descricao": $("#textareaMovimentar").val(),
+								"status": $("#atividade").val()
+							});
+							$("#historico").val(JSON.stringify(json));
+							$("#tempoGastoResolucao").val($("#textTempoGasto").val());
+							$("#textResolucaoJuridico").val($("#textareaMovimentar").val());
+							if ($("#radioDecisao1").is(":checked")) {
+								enviarEmail($("#atividade").val());
+							}
+						}
+						else if ($("#atividade").val() == 11) {
+							var json = JSON.parse($("#historico").val());
+
+							json.push({
+								"usuario": $("#usuarioLogado").val(),
+								"data": BuscaDataAtual(),
+								"descricao": ($("#radioDecisao1").is(":checked")) ? "Aprovado: " + $("#textareaMovimentar").val() : "Retornado: " + $("#textareaMovimentar").val(),
+								"status": $("#atividade").val()
+							});
+							$("#historico").val(JSON.stringify(json));
+						}
+					}
+				}
+				else {
+					return false;
+				}
+			}
+		</script>
+	</div>
+</body>
+
+</html>
