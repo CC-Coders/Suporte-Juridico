@@ -302,40 +302,31 @@ function CarregaUsuarios(){
 }
 
 function CarregaGruposUsuario() {
-    var ds = null;
-    if (VerificaPermissao($("#usuarioLogado").val())) {
-         ds = DatasetFactory.getDataset('Group', null, [], null);
-
-         
-	    for (var i = 0; i < ds.values.length; i++) {
-	        if (ds.values[i]["groupPK.groupId"].includes("Obra") || ds.values[i]["groupPK.groupId"].includes("Matriz") || ds.values[i]["groupPK.groupId"].includes("Britagem") || ds.values[i]["groupPK.groupId"].includes("Regional")) {
-	            var option = "<option value='" + ds.values[i]["groupPK.groupId"] + "'>" + ds.values[i]["groupPK.groupId"] + "</option>"
-	            $("#selectObra").append(option);
-	            console.log("ifou");
-	        }
-	        else {
-	            console.log(ds.values[i].groupId);
-	        }
-	    }
+    var usuario = $("#usuarioLogado").val();
+    var restricoes = [DatasetFactory.createConstraint("usuario", usuario, usuario, ConstraintType.MUST)];
+    if (VerificaPermissao(usuario)) {
+        restricoes.push(DatasetFactory.createConstraint("permissaoGeral", "true", "true", ConstraintType.MUST));
     }
-    else{
-        var c1 = DatasetFactory.createConstraint("colleagueId", $("#usuarioLogado").val(), $("#usuarioLogado").val(), ConstraintType.MUST);
-        ds = DatasetFactory.getDataset('colleagueGroup', null, [c1], null);
-
-        
-    for (var i = 0; i < ds.values.length; i++) {
-        if (ds.values[i]["colleagueGroupPK.groupId"].includes("Obra") || ds.values[i]["colleagueGroupPK.groupId"].includes("Matriz") || ds.values[i]["colleagueGroupPK.groupId"].includes("Britagem") || ds.values[i]["colleagueGroupPK.groupId"].includes("Regional") || ds.values[i]["colleagueGroupPK.groupId"].includes("Central Sul")) {
-            var option = "<option value='" + ds.values[i]["colleagueGroupPK.groupId"] + "'>" + ds.values[i]["colleagueGroupPK.groupId"] + "</option>"
-            $("#selectObra").append(option);
-            console.log("ifou");
+    var centrosDeCusto = DatasetFactory.getDataset("BuscaPermissaoColigadasUsuario", null, restricoes, null);
+    if (!centrosDeCusto || !centrosDeCusto.values) {
+        return;
+    }
+    var opcoes = "";
+    var coligadaAtual = "";
+    centrosDeCusto.values.forEach(function (centroDeCusto) {
+        if (coligadaAtual != centroDeCusto.CODCOLIGADA) {
+            if (coligadaAtual != "") {
+                opcoes += "</optgroup>";
+            }
+            opcoes += "<optgroup label='" + centroDeCusto.CODCOLIGADA + " - " + centroDeCusto.NOMEFANTASIA + "'>";
+            coligadaAtual = centroDeCusto.CODCOLIGADA;
         }
-        else {
-            console.log(ds.values[i].groupId);
-        }
+        opcoes += "<option value='" + centroDeCusto.CODCOLIGADA + " - " + centroDeCusto.CODCCUSTO + " - " + centroDeCusto.perfil + "'>" + centroDeCusto.CODCCUSTO + " - " + centroDeCusto.perfil + "</option>";
+    });
+    if (coligadaAtual != "") {
+        opcoes += "</optgroup>";
     }
-    }
-    
-
+    $("#selectObra").append(opcoes);
 }
 
 function CamposAprovacao() {
@@ -412,10 +403,10 @@ function BuscaNomeUsuario(usuario) {
 function ValidaCampos(){
     var atividade = $("#atividade").val();
     var datenow = new Date();
-    datenow.setHours(00);
-    datenow.setMinutes(00);
-    datenow.setSeconds(00);
-    datenow.setMilliseconds(000);
+    datenow.setHours(0);
+    datenow.setMinutes(0);
+    datenow.setSeconds(0);
+    datenow.setMilliseconds(0);
 
     var dateprazo = $("#prazo_limite").val();
     dateprazo = dateprazo.split("/");
